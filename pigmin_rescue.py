@@ -7,7 +7,7 @@ import time
 CATEGORY_FALLBACK = 91
 categoryMap = {u"뉴스": 1, u"Interview-한국어": 49, u"프리뷰": 20, u"리뷰": 7}
 #id category title slogan content published created modified
-SQL_FORMAT = "INSERT INTO `tc_Entries` VALUES (1,1,%d,0,3,0,%d,'%s','%s','%s','ttml','modern','/',NULL,1,1,%d,%d,%d,0,0);"
+SQL_FORMAT = "INSERT INTO `tc_Entries` VALUES (1,1,%d,0,3,0,%d,'%s','%s','%s','ttml','modern','/', 0, 0, NULL,1,1,%d,%d,%d,0,0,0);"
 
 class TcArticle(object):
 	def __init__(self, data):
@@ -15,7 +15,10 @@ class TcArticle(object):
 		self.title = self.title.replace("'", "\\'")
 		
 		self.content = data["description"]
-		self.content = re.search("(.*)<iframe.*", self.content).group(1)
+		self.content = re.sub("<iframe.*</iframe>", "", self.content)
+		self.content = re.sub("<script.*</script>", "", self.content)
+		self.content = re.sub('<img src="http://feeds.feedburner.com/~r/.*/>', "", self.content)
+		
 		self.content = self.content.replace("\n", "")
 		self.content = self.content.replace("'", "\\'")
 		
